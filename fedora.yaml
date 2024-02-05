@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fedora-deployment
+  labels:
+    app: fedora-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fedora-pod
+  template:
+    metadata:
+      labels:
+        app: fedora-pod
+    spec:
+      containers:
+      - name: fedora
+        securityContext:
+          runAsUser: 0
+          privileged: true
+          capabilities:
+            add: ["CAP_MKNOD"]
+        image: quay.io/akaris/fedora:uninterruptible
+        command:
+          - /usr/bin/uninterruptible.sh
+        imagePullPolicy: Always
